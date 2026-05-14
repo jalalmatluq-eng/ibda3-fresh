@@ -163,7 +163,7 @@
                 </a>
                 <a href="tel:+967776077155" class="flex items-center justify-center gap-3 bg-gray-900 border border-gray-700 rounded-2xl p-4 text-gray-300 hover:text-white hover:border-red-500 hover:bg-red-500/10 transition-all group">
                     <i data-lucide="phone" class="w-6 h-6 text-red-500 group-hover:scale-110 transition-transform"></i>
-                    <span class="font-bold text-lg tracking-wide">+966 50 123 4567</span>
+                    <span class="font-bold text-lg tracking-wide">+967 776 077 155</span>
                 </a>
             </div>
             
