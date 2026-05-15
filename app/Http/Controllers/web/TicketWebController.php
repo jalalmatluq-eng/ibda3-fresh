@@ -30,7 +30,13 @@ class TicketWebController extends Controller
         if ($request->type)     $query->where('type',     $request->type);
         if ($request->search) {
             $s = $request->search;
-            $query->where(fn($q) => $q->where('title', 'like', "%$s%")->orWhere('id', $s));
+            $query->where(function ($q) use ($s) {
+                $q->where('title', 'like', "%$s%")
+                  ->orWhere('ticket_number', 'like', "%$s%")
+                  ->orWhereHas('user', function ($uq) use ($s) {
+                      $uq->where('name', 'like', "%$s%");
+                  });
+            });
         }
 
         $tickets = $query->orderByDesc('created_at')->paginate(15)->withQueryString();

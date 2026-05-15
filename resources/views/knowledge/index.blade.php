@@ -106,7 +106,7 @@
                 @empty
                 <div class="col-span-2 text-center py-20 bg-[#1a1a24] rounded-3xl border border-dashed border-gray-700">
                     <div class="bg-gray-800/50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 border border-gray-700">
-                        <i data-lucide="search-X" class="w-10 h-10 text-gray-500"></i>
+                        <i data-lucide="search-x" class="w-10 h-10 text-gray-500"></i>
                     </div>
                     <h3 class="text-xl font-bold text-white">لا توجد مقالات مطابقة</h3>
                     <p class="text-gray-500 mt-2">جرب البحث بكلمات مختلفة أو تصفح تصنيف آخر</p>

@@ -30,12 +30,12 @@
     <form method="GET" action="/tickets" class="bg-[#1a1a24] rounded-2xl border border-gray-800 p-6 grid grid-cols-1 md:grid-cols-4 gap-6 relative z-10">
         <div class="relative">
             <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">بحث حر</label>
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="رقم، عنوان، عميل..." class="w-full bg-gray-900 border border-gray-700 text-white rounded-xl px-4 py-3 focus:ring-0 focus:border-red-500 transition-colors placeholder-gray-600 outline-none">
+            <input type="text" id="searchInput" name="search" value="{{ request('search') }}" placeholder="رقم، عنوان، عميل..." class="w-full bg-gray-900 border border-gray-700 text-white rounded-xl px-4 py-3 focus:ring-0 focus:border-red-500 transition-colors placeholder-gray-600 outline-none">
         </div>
         <div class="relative">
             <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">حالة التذكرة</label>
             <div class="relative">
-                <select name="status" class="w-full bg-gray-900 border border-gray-700 text-white rounded-xl px-4 py-3 focus:ring-0 focus:border-red-500 transition-colors appearance-none outline-none">
+                <select name="status" onchange="this.form.submit()" class="w-full bg-gray-900 border border-gray-700 text-white rounded-xl px-4 py-3 focus:ring-0 focus:border-red-500 transition-colors appearance-none outline-none">
                     <option value="" class="bg-gray-900 text-gray-400">كل الحالات</option>
                     <option value="open" {{ request('status')=='open'?'selected':'' }} class="bg-gray-900 text-white">مفتوحة</option>
                     <option value="in_progress" {{ request('status')=='in_progress'?'selected':'' }} class="bg-gray-900 text-white">قيد المعالجة</option>
@@ -49,7 +49,7 @@
         <div class="relative">
             <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">الأولوية</label>
             <div class="relative">
-                <select name="priority" class="w-full bg-gray-900 border border-gray-700 text-white rounded-xl px-4 py-3 focus:ring-0 focus:border-red-500 transition-colors appearance-none outline-none">
+                <select name="priority" onchange="this.form.submit()" class="w-full bg-gray-900 border border-gray-700 text-white rounded-xl px-4 py-3 focus:ring-0 focus:border-red-500 transition-colors appearance-none outline-none">
                     <option value="" class="bg-gray-900 text-gray-400">كل الأولويات</option>
                     <option value="normal" {{ request('priority')=='normal'?'selected':'' }} class="bg-gray-900 text-white">عادية</option>
                     <option value="high" {{ request('priority')=='high'?'selected':'' }} class="bg-gray-900 text-white">مرتفعة</option>
@@ -150,4 +150,25 @@
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     select { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
 </style>
+
+<script>
+    let searchTimeout = null;
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        // Move cursor to end of input if there's a value
+        if (searchInput.value) {
+            searchInput.focus();
+            const val = searchInput.value;
+            searchInput.value = '';
+            searchInput.value = val;
+        }
+
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                this.form.submit();
+            }, 500);
+        });
+    }
+</script>
 @endsection
