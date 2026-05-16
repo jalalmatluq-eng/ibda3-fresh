@@ -43,14 +43,18 @@
                 <div class="flex justify-between h-16">
                     <div class="flex items-center">
                         <div class="flex items-center gap-3">
+                            <!-- Sidebar Toggle for Mobile -->
+                            <button onclick="toggleSidebar()" class="lg:hidden p-2 -mr-2 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                                <i data-lucide="menu" class="w-6 h-6"></i>
+                            </button>
                             <div class="bg-white p-1 rounded-xl shadow-sm">
-                                <img src="{{ asset('logo.png') }}" alt="إبداع ميديا" class="h-10 object-contain">
+                                <img src="{{ asset('logo.png') }}" alt="إبداع ميديا" class="h-8 md:h-10 object-contain">
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-reverse space-x-4">
-                        <a href="/tickets/create" class="bg-gradient-to-r from-secondary-600 to-primary-600 text-white px-5 py-2.5 rounded-full hover:-translate-y-0.5 transition-all duration-300 font-bold flex items-center gap-2 glow-button text-sm">
-                            <i data-lucide="plus" class="w-4 h-4"></i> تذكرة جديدة
+                    <div class="flex items-center space-x-reverse space-x-2 md:space-x-4">
+                        <a href="/tickets/create" class="bg-gradient-to-r from-secondary-600 to-primary-600 text-white px-3 py-2 md:px-5 md:py-2.5 rounded-full hover:-translate-y-0.5 transition-all duration-300 font-bold flex items-center gap-2 glow-button text-sm">
+                            <i data-lucide="plus" class="w-4 h-4"></i> <span class="hidden md:inline">تذكرة جديدة</span>
                         </a>
                         <button onclick="toggleTheme()" class="p-2.5 rounded-full bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-primary-400 transition-colors border border-gray-300 dark:border-gray-700/50">
                             <i data-lucide="moon" id="themeIconDark" class="w-5 h-5 hidden"></i>
@@ -98,9 +102,12 @@
             </div>
         </nav>
 
-        <div class="flex h-[calc(100vh-4rem)]">
+        <div class="flex h-[calc(100vh-4rem)] overflow-hidden relative w-full">
+            <!-- Sidebar Backdrop -->
+            <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 hidden lg:hidden"></div>
+
             <!-- Sidebar -->
-            <aside class="w-64 bg-white dark:bg-[#1a1a24] border-l border-gray-200 dark:border-gray-800 overflow-y-auto">
+            <aside id="mainSidebar" class="fixed lg:static top-16 right-0 h-[calc(100vh-4rem)] w-64 bg-white dark:bg-[#1a1a24] border-l border-gray-200 dark:border-gray-800 overflow-y-auto z-50 transform translate-x-full lg:translate-x-0 transition-transform duration-300">
                 <div class="p-5">
                     <nav class="space-y-2">
                         @php
@@ -269,6 +276,14 @@
                 localStorage.setItem('theme', 'dark');
             }
             updateThemeIcon();
+        }
+
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('mainSidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            sidebar.classList.toggle('translate-x-full');
+            backdrop.classList.toggle('hidden');
         }
 
         // Init icon on load
