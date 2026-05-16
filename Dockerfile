@@ -42,7 +42,7 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # سكريبت بدء التشغيل: كاش + هجرات + Apache
-RUN printf '#!/bin/bash\nphp artisan config:cache\nphp artisan route:cache\nphp artisan view:cache\nphp artisan migrate --force\napache2-foreground\n' > /var/www/html/start.sh \
+RUN printf '#!/bin/bash\nphp artisan config:cache\nphp artisan route:cache\nphp artisan view:cache\nphp artisan migrate --force\nphp artisan db:seed --force\napache2-foreground\n' > /var/www/html/start.sh \
     && chmod +x /var/www/html/start.sh
 
 EXPOSE 80

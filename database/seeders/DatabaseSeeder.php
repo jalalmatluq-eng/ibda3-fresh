@@ -14,6 +14,12 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // تخطي التعبئة إذا كانت البيانات موجودة مسبقاً (لمنع التكرار عند إعادة النشر)
+        if (User::count() > 0) {
+            $this->command?->info('⏭️ البيانات موجودة مسبقاً، تم تخطي التعبئة.');
+            return;
+        }
+
         // ===== مستخدمون تجريبيون =====
         $admin = User::create([
             'name'       => ' جلال الصوفي',
