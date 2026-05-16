@@ -75,7 +75,7 @@ class NotificationManager {
     getNotificationClasses(type) {
         const classes = {
             'success': 'bg-green-100 border border-green-200 text-green-800',
-            'error': 'bg-red-100 border border-red-200 text-red-800',
+            'error': 'bg-primary-100 border border-primary-200 text-primary-800',
             'warning': 'bg-yellow-100 border border-yellow-200 text-yellow-800',
             'info': 'bg-blue-100 border border-blue-200 text-blue-800'
         };

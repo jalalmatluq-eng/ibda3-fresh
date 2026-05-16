@@ -26,35 +26,43 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $support1 = User::create([
-            'name'           => 'سارة الدعم الفني',
+            'name'           => 'سليم سليمان الدعم الفني',
             'email'          => 'support1@ibda3.com',
             'password'       => Hash::make('Support@1234'),
-            'phone'          => '0507654321',
+            'phone'          => '967773296973',
             'role'           => 'support',
             'specialization' => 'technical',
             'is_active'      => true,
         ]);
 
         $support2 = User::create([
-            'name'           => 'محمد الدعم المحاسبي',
+            'name'           => 'عبدالرزاق جمعان الدعم المحاسبي',
             'email'          => 'support2@ibda3.com',
-            'password'       => Hash::make('Support@1234'),
-            'phone'          => '0509876543',
+            'password'       => Hash::make('Support2@1234'),
+            'phone'          => '967776616718',
             'role'           => 'support',
             'specialization' => 'accounting',
             'is_active'      => true,
         ]);
 
         $manager = User::create([
-            'name'       => 'فاطمة المديرة المالية',
+            'name'       => 'عبدالرحمن النقيب المدير المالي',
             'email'      => 'manager@ibda3.com',
             'password'   => Hash::make('Manager@1234'),
-            'phone'      => '0506543210',
+            'phone'      => '967776816523',
             'role'       => 'financial_manager',
             'department' => 'المالية',
             'is_active'  => true,
         ]);
-
+        $support3 = User::create([
+            'name'       => 'احمد المتوكل مساعد تقني',
+            'email'      => 'support3@ibda3.com',
+            'password'   => Hash::make('Support3@1234'),
+            'phone'      => '967776816523',
+            'role'       => 'support',
+            'specialization' => 'technical',
+            'is_active'  => true,
+        ]);
         $accountants = [];
         $accountantData = [
             ['علي المحاسب',    'ali@ibda3.com',    '0502345678'],
@@ -150,9 +158,10 @@ class DatabaseSeeder extends Seeder
             [
                 ['مشرف',           'admin@ibda3.com',    'Admin@1234'],
                 ['دعم فني',        'support1@ibda3.com', 'Support@1234'],
-                ['دعم محاسبي',     'support2@ibda3.com', 'Support@1234'],
+                ['دعم محاسبي',     'support2@ibda3.com', 'Support2@1234'],
                 ['مدير مالي',      'manager@ibda3.com',  'Manager@1234'],
                 ['محاسب',          'ali@ibda3.com',      'User@1234'],
+                ['دعم فني',        'support3@ibda3.com', 'Support3@1234'],
             ]
         );
     }
