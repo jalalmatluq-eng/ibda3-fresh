@@ -187,20 +187,22 @@ composer dev
 > - تنفيذ الهجرات
 > - تثبيت حزم npm وبناء الأصول
 
-### التثبيت عبر Docker
+### التثبيت عبر Docker (Docker Compose)
+
+النظام مهيأ للعمل بالكامل باستخدام **Docker Compose** عبر ثلاث حاويات (PHP-FPM و Nginx و MySQL).
 
 ```bash
-# بناء وتشغيل الحاوية
-docker build -t ibda3-support .
-docker run -d -p 8000:80 \
-  -e APP_KEY=base64:YOUR_KEY_HERE \
-  -e DB_CONNECTION=sqlite \
-  ibda3-support
+# تشغيل جميع الخدمات في الخلفية
+docker compose up -d
+
+# إيقاف الخدمات
+docker compose down
 ```
 
-يتم تشغيل التطبيق على المنفذ `8000` باستخدام **PHP 8.2 + Apache** مع دعم:
-- `mod_rewrite` لروابط Laravel النظيفة
-- إضافات `pdo_mysql` و `pdo_pgsql` و `intl` و `gettext`
+يتم تشغيل التطبيق على المنفذ **`8081`**، ويمكنك الوصول إليه عبر الرابط التالي:
+[http://localhost:8081](http://localhost:8081)
+
+وستقوم الحاوية تلقائياً بتهيئة التطبيق وتثبيت الاعتماديات وتوليد المفتاح وضبط الصلاحيات عند التشغيل الأول.
 
 ---
 
