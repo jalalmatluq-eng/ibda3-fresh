@@ -1,16 +1,18 @@
-# المرحلة الأولى: بناء ملفات الواجهة (Vite)
+# المرحلة الأولى: جلب Composer بشكل صريح لتفادي خطأ الاختفاء
+FROM composer:latest AS composer_base
+
+# المرحلة الثانية: بناء ملفات الواجهة (Vite)
 FROM node:20-alpine AS node_builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
-# انسخ كل الملفات اللازمة للبناء (بما في ذلك tailwind config و postcss إذا وجدا)
 COPY . .
 RUN npm run build
 
-# المرحلة الثانية: إعداد بيئة PHP و Apache
+# المرحلة الثالثة: إعداد بيئة PHP و Apache
 FROM php:8.2-apache
 
-# تثبيت الإضافات والمتطلبات
+# تثبيت الإضافات والمتطلبات للنظام
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         libpng-dev \
@@ -27,17 +29,16 @@ RUN apt-get update \
 
 WORKDIR /var/www/html
 
-# تثبيت Composer
-COPY --from=composer:latest /usr/local/bin/composer /usr/local/bin/composer
+# نسخ Composer من المرحلة الأولى التي عرفناها فوق
+COPY --from=composer_base /usr/bin/composer /usr/local/bin/composer
 
-# 1. انسخ ملفات المشروع كاملة أولاً (لكي يجد الملحق ملف artisan)
+# 1. انسخ ملفات المشروع كاملة أولاً
 COPY . .
 
-# 2. انسخ ملفات الـ Assets المبنية من المرحلة الأولى
+# 2. انسخ ملفات الـ Assets المبنية من مرحلة Node
 COPY --from=node_builder /app/public/build ./public/build
 
-# 3. تثبيت مكتبات PHP
-# لاحظ أننا وضعنا هذا الأمر بعد COPY لضمان وجود ملف artisan
+# 3. تثبيت مكتبات PHP (الآن الـ artisan والـ composer متواجدان بنسبة 100%)
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --prefer-dist
 
 # إعدادات Apache
@@ -45,7 +46,7 @@ ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri 's!DocumentRoot /var/www/html!DocumentRoot /var/www/html/public!g' /etc/apache2/sites-available/*.conf \
     && sed -ri 's!<Directory /var/www/html>!<Directory /var/www/html/public>!g' /etc/apache2/apache2.conf /etc/apache2/sites-available/*.conf
 
-# ضبط الصلاحيات
+# ضبط الصلاحيات للمجلدات الحيوية
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # عمل Cache (استخدام || true لتفادي توقف البناء إذا لم تكن قاعدة البيانات متصلة)
