@@ -1,4 +1,4 @@
-# المرحلة الأولى: جلب الـ Composer وتسمية المرحلة بشكل صريح لضمان التحميل
+# المرحلة الأولى: جلب الـ Composer وتسمية المرحلة بشكل صريح لضمان التحميل وحساب الـ Checksum
 FROM docker.io/library/composer:latest AS composer_base
 
 # المرحلة الثانية: بناء ملفات الواجهة الأمامية (Vite)
@@ -29,7 +29,7 @@ RUN apt-get update \
 
 WORKDIR /var/www/html
 
-# جلب ملف الـ Composer من المرحلة الأولى (تغيير المسار لـ /usr/bin لضمان التوافق)
+# جلب ملف الـ Composer من المرحلة الأولى المعرفة بالأعلى بدلاً من السحب الخارجي المباشر
 COPY --from=composer_base /usr/bin/composer /usr/local/bin/composer
 
 # 1. نسخ ملفات المشروع بالكامل أولاً
@@ -41,7 +41,7 @@ COPY --from=node_builder /app/public/build ./public/build
 # 3. تشغيل Composer Install لتثبيت مكتبات السيرفر
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --prefer-dist
 
-# ضبط إعدادات الـ Document Root لـ Apache لتوجه إلى مجلد public
+# ضبط إعدادات الـ Document Root لـ Apache لتوجه إلى مجلد public الخاص بـ Laravel
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri 's!DocumentRoot /var/www/html!DocumentRoot /var/www/html/public!g' /etc/apache2/sites-available/*.conf \
     && sed -ri 's!<Directory /var/www/html>!<Directory /var/www/html/public>!g' /etc/apache2/apache2.conf /etc/apache2/sites-available/*.conf
@@ -49,7 +49,7 @@ RUN sed -ri 's!DocumentRoot /var/www/html!DocumentRoot /var/www/html/public!g' /
 # منح صلاحيات القراءة والكتابة لمجلدات Laravel الأساسية
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# إنشاء التخزين المؤقت لـ Laravel لتسريع الأداء (تخطي الأخطاء في حال غياب الاتصال بقاعدة البيانات أثناء البناء)
+# إنشاء التخزين المؤقت لـ Laravel لتسريع الأداء
 RUN php artisan config:cache || true
 RUN php artisan route:cache || true
 RUN php artisan view:cache || true
