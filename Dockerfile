@@ -29,15 +29,14 @@ WORKDIR /var/www/html
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# Copy ALL application code first
+COPY . ./
+
 # Copy built frontend assets from Node builder
 COPY --from=node_builder /var/www/html/public/build public/build
 
-# Copy composer files and install PHP dependencies
-COPY composer.json composer.lock ./
+# Now install PHP dependencies (artisan is already available)
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --prefer-dist
-
-# Copy application code
-COPY . ./
 
 # Set Apache DocumentRoot to public folder
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
@@ -46,6 +45,11 @@ RUN sed -ri 's!DocumentRoot /var/www/html!DocumentRoot /var/www/html/public!g' /
 
 # Give Apache permission to write to storage and cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Cache Laravel config for production
+RUN php artisan config:cache || true
+RUN php artisan route:cache || true
+RUN php artisan view:cache || true
 
 EXPOSE 80
 CMD ["apache2-foreground"]
