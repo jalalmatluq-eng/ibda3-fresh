@@ -42,9 +42,14 @@ COPY . .
 COPY --from=node_builder /app/public/build ./public/build
 
 # 3. تشغيل Composer Install لتثبيت مكتبات السيرفر
+# تأكد من وجود artisan داخل الحاوية قبل تشغيل composer scripts
+RUN ls -la /var/www/html
+RUN test -f artisan || (echo "artisan missing in /var/www/html" && exit 1)
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --prefer-dist
 
+
 # ضبط إعدادات الـ Document Root لـ Apache لتوجه إلى مجلد public الخاص بـ Laravel
+
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri 's!DocumentRoot /var/www/html!DocumentRoot /var/www/html/public!g' /etc/apache2/sites-available/*.conf \
     && sed -ri 's!<Directory /var/www/html>!<Directory /var/www/html/public>!g' /etc/apache2/apache2.conf /etc/apache2/sites-available/*.conf
