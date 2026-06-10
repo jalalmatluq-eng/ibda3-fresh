@@ -1,5 +1,6 @@
-# المرحلة الأولى: جلب الـ Composer وتسمية المرحلة بشكل صريح لضمان التحميل وحساب الـ Checksum
+# المرحلة الأولى: جلب الـ Composer وتسمية المرحلة بشكل صريح
 FROM docker.io/library/composer:latest AS composer_base
+
 
 # المرحلة الثانية: بناء ملفات الواجهة الأمامية (Vite)
 FROM docker.io/library/node:20-alpine AS node_builder
@@ -29,8 +30,10 @@ RUN apt-get update \
 
 WORKDIR /var/www/html
 
-# جلب ملف الـ Composer من المرحلة الأولى المعرفة بالأعلى بدلاً من السحب الخارجي المباشر
+# جلب ملف الـ Composer من مرحلة composer_base
+# (composer image عادة يحتوي composer في /usr/bin/composer)
 COPY --from=composer_base /usr/bin/composer /usr/local/bin/composer
+
 
 # 1. نسخ ملفات المشروع بالكامل أولاً
 COPY . .
