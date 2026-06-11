@@ -51,9 +51,9 @@ RUN sed -ri 's!DocumentRoot /var/www/html!DocumentRoot /var/www/html/public!g' /
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # إنشاء التخزين المؤقت لـ Laravel لتسريع الأداء
-RUN php artisan config:cache || true
-RUN php artisan route:cache || true
-RUN php artisan view:cache || true
+# RUN php artisan config:cache || true
+# RUN php artisan route:cache || true
+# RUN php artisan view:cache || true
 
 EXPOSE 80
 
