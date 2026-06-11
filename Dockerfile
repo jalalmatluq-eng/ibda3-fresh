@@ -58,4 +58,4 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 EXPOSE 80
 
 # السطر الأخير: تشغيل الـ Migration تلقائياً فور إقلاع السيرفر ثم تشغيل Apache
-CMD ["sh", "-c", "php artisan migrate --force && apache2-foreground"]
+CMD ["sh", "-c", "php artisan migrate --force && php artisan db:seed --force && apache2-foreground"]
